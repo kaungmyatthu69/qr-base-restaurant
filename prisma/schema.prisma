@@ -1,0 +1,99 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Table {
+  id        Int      @id @default(autoincrement())
+  capacity  Int
+  status    String   @default("available") // available, reserved
+  orders    Order[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Order {
+  id          Int         @id @default(autoincrement())
+  tableId     Int
+  table       Table       @relation(fields: [tableId], references: [id])
+  total_price Int
+  isPaid      Boolean
+  isParcel    Boolean     @default(false)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  orderItems  OrderItem[]
+}
+
+enum MenuSize {
+  S
+  M
+  L
+}
+
+model MenuItem {
+  id            Int         @id @default(autoincrement())
+  name          String
+  price         Float
+  description   String?
+  imageUrl      String?
+  imagePublicId String?
+  isStock       Boolean     @default(true)
+  size          MenuSize[]
+  orderItems    OrderItem[]
+  categories    Category[]
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @default(now()) @updatedAt
+}
+
+model OrderItem {
+  // Composite Primary Key (ensures one unique item per order)
+  orderId      Int
+  menuItemId   Int
+  // Custom Order Line Item Data
+  quantity     Int
+  selectedSize MenuSize // The size chosen for this specific order item
+  unitPrice    Float // Price when ordered (important!)
+
+  // Relationships
+  order     Order    @relation(fields: [orderId], references: [id])
+  menuItem  MenuItem @relation(fields: [menuItemId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@id([orderId, menuItemId])
+}
+
+enum Role {
+  Manager
+  Staff
+  Chef
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  role      Role
+  email     String
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Category {
+  id        Int        @id @default(autoincrement())
+  name      String
+  menuItems MenuItem[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @default(now()) @updatedAt
+}

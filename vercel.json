@@ -1,0 +1,6 @@
+{
+  "version": 2,
+  "framework": "nestjs",
+  "buildCommand": "npm run vercel-build",
+  "rewrites": [{ "source": "/(.*)", "destination": "/src/main.ts" }]
+}
