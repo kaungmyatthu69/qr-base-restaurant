@@ -6,8 +6,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { AuthController } from './auth.controller';
 import { LocalStrategy } from './local.strategy';
 import { JwtStrategy } from './jwt.strategy';
-import { LoggerMiddleware } from 'src/middlewares/logger.middleware';
-
+import { LoggerMiddleware } from '../middlewares/logger.middleware';
 
 @Module({
   imports: [

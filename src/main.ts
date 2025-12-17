@@ -9,6 +9,7 @@ async function bootstrap() {
 
   // 2. Use a GLOBAL Interceptor for consistent successful response structure (the Envelope)
   app.enableCors();
+  app.setGlobalPrefix('api');
   app.useGlobalInterceptors(new ResponseWrapperInterceptor());
   await app.listen(process.env.PORT ?? 3000);
 }

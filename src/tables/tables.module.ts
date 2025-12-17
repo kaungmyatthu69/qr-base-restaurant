@@ -1,7 +1,7 @@
 import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { TablesController } from './tables.controller';
 import { TablesService } from './tables.service';
-import { LoggerMiddleware } from 'src/middlewares/logger.middleware';
+import { LoggerMiddleware } from '../middlewares/logger.middleware';
 
 @Module({
   imports: [],
