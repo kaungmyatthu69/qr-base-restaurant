@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { MenuItemsController } from './menu-items.controller';
 import { MenuItemsService } from './menu-items.service';
-import { CloundinaryModule } from 'src/cloundinary/cloundinary.module';
+import { CloundinaryModule } from '../cloundinary/cloundinary.module';
 
 @Module({
   imports: [CloundinaryModule],

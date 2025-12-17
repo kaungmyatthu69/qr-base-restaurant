@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { CreateTableDTO } from 'src/schemas/table/create-table.schema';
-import { UpdateTableDTO } from 'src/schemas/table/update-table.schema';
+import { CreateTableDTO } from '../schemas/table/create-table.schema';
+import { UpdateTableDTO } from '../schemas/table/update-table.schema';
 
 @Injectable()
 export class TablesService {

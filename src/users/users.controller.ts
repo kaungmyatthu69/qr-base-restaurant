@@ -7,11 +7,11 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { Roles } from 'src/auth/decorators/roles.decorator';
-import { UserRole } from 'src/common/enums/user-role.enum';
-import { RolesGuard } from 'src/auth/guards/roles.guard';
-import { Serialize } from 'src/common/decorators/serialize.decorator';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { Roles } from '../auth/decorators/roles.decorator';
+import { UserRole } from '../common/enums/user-role.enum';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { Serialize } from '../common/decorators/serialize.decorator';
 import { UserResponseDto } from './dto/user.response.dto';
 
 @Controller('users')

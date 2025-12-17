@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { CreateMenuItemDTO } from 'src/schemas/menu-items/create-menu-item.schema';
-import { UpdateMenuItemDto } from 'src/schemas/menu-items/update-menu-item.schema';
+import { CreateMenuItemDTO } from '../schemas/menu-items/create-menu-item.schema';
+import { UpdateMenuItemDto } from '../schemas/menu-items/update-menu-item.schema';
 
 @Injectable()
 export class MenuItemsService {

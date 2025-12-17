@@ -12,10 +12,10 @@ import { AuthService } from './auth.service';
 import {
   CreateUserDTO,
   createUserSchema,
-} from 'src/schemas/user/create-user.schema';
-import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
-import { UsersService } from 'src/users/users.service';
-import { Public } from 'src/common/decorators/public.decorator';
+} from '../schemas/user/create-user.schema';
+import { ZodValidationPipe } from '../common/pipes/zod-validation.pipe';
+import { UsersService } from '../users/users.service';
+import { Public } from '../common/decorators/public.decorator';
 
 @Controller('auth')
 export class AuthController {

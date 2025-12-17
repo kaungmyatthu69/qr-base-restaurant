@@ -14,12 +14,12 @@ import { CategoriesService } from './categories.service';
 import {
   CreateCategoryDTO,
   createCategorySchema,
-} from 'src/schemas/category/create-category.schema';
-import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
+} from '../schemas/category/create-category.schema';
+import { ZodValidationPipe } from '../common/pipes/zod-validation.pipe';
 import {
   updateCategorySchema,
   UpdateCategoryDTO,
-} from 'src/schemas/category/update-category.schema';
+} from '../schemas/category/update-category.schema';
 
 @Controller('categories')
 export class CategoriesController {
