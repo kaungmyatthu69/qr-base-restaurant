@@ -1,6 +1,15 @@
 {
   "version": 2,
-  "framework": "nestjs",
-  "buildCommand": "npm run vercel-build",
-  "rewrites": [{ "source": "/(.*)", "destination": "/src/main.ts" }]
+  "builds": [
+    {
+      "src": "dist/main.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "dist/main.js"
+    }
+  ]
 }
