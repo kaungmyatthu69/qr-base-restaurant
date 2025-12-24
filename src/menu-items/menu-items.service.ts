@@ -1,35 +1,127 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
+import { Injectable } from '@nestjs/common';
 import { CreateMenuItemDTO } from '../schemas/menu-items/create-menu-item.schema';
 import { UpdateMenuItemDto } from '../schemas/menu-items/update-menu-item.schema';
+import { MenuItemsRepository } from './repositories/menu-items.repository';
+import { PaginatedResponse } from '../schemas/pagination/pagination.schema';
+import { MenuItem } from '@prisma/client';
+
+export interface FilterMenuItemsDTO {
+  name?: string;
+  categoryId?: number;
+  minPrice?: number;
+  maxPrice?: number;
+  isStock?: boolean;
+}
 
 @Injectable()
 export class MenuItemsService {
-  constructor(
-    private prisma: PrismaService,
-  ) {}
+  constructor(private readonly menuItemsRepository: MenuItemsRepository) {}
 
   async findAll() {
-    return this.prisma.menuItem.findMany({
+    return this.menuItemsRepository.findAll({
       include: {
         categories: true,
       },
     });
   }
 
-  async findByName(name: string) {
-    return this.prisma.menuItem.findMany({
-      where: {
-        name: {
-          startsWith: name,
-          mode: 'insensitive',
-        },
+  async findAllWithPagination(
+    page: number,
+    limit: number,
+  ): Promise<PaginatedResponse<MenuItem>> {
+    return this.menuItemsRepository.findWithPagination(page, limit, {
+      include: {
+        categories: true,
       },
     });
   }
+
+  async filterMenuItems(filters: FilterMenuItemsDTO) {
+    const where: any = {};
+
+    if (filters.name) {
+      where.name = {
+        contains: filters.name,
+        mode: 'insensitive',
+      };
+    }
+
+    if (filters.categoryId) {
+      where.categories = {
+        some: {
+          id: filters.categoryId,
+        },
+      };
+    }
+
+    if (filters.minPrice !== undefined || filters.maxPrice !== undefined) {
+      where.price = {};
+      if (filters.minPrice !== undefined) {
+        where.price.gte = filters.minPrice;
+      }
+      if (filters.maxPrice !== undefined) {
+        where.price.lte = filters.maxPrice;
+      }
+    }
+
+    if (filters.isStock !== undefined) {
+      where.isStock = filters.isStock;
+    }
+
+    return this.menuItemsRepository.findAll({
+      where,
+      include: {
+        categories: true,
+      },
+    });
+  }
+
+  async filterMenuItemsWithPagination(
+    filters: FilterMenuItemsDTO,
+    page: number,
+    limit: number,
+  ): Promise<PaginatedResponse<MenuItem>> {
+    const where: any = {};
+
+    if (filters.name) {
+      where.name = {
+        contains: filters.name,
+        mode: 'insensitive',
+      };
+    }
+
+    if (filters.categoryId) {
+      where.categories = {
+        some: {
+          id: filters.categoryId,
+        },
+      };
+    }
+
+    if (filters.minPrice !== undefined || filters.maxPrice !== undefined) {
+      where.price = {};
+      if (filters.minPrice !== undefined) {
+        where.price.gte = filters.minPrice;
+      }
+      if (filters.maxPrice !== undefined) {
+        where.price.lte = filters.maxPrice;
+      }
+    }
+
+    if (filters.isStock !== undefined) {
+      where.isStock = filters.isStock;
+    }
+
+    return this.menuItemsRepository.findWithPagination(page, limit, {
+      where,
+      include: {
+        categories: true,
+      },
+    });
+  }
+
   async findById(id: number) {
-    return this.prisma.menuItem.findUnique({
-      where: { id },
+    return this.menuItemsRepository.findById(id, {
       include: {
         categories: true,
       },
@@ -37,57 +129,15 @@ export class MenuItemsService {
   }
 
   async create(data: CreateMenuItemDTO) {
-    const { categories, ...rest } = data;
-
-    if (categories && categories.length > 0) {
-      const existingCategories = await this.prisma.category.findMany({
-        where: { id: { in: categories } },
-      });
-      if (existingCategories.length !== categories.length) {
-        throw new BadRequestException('One or more categories not found.');
-      }
-    }
-
-    return this.prisma.menuItem.create({
-      data: {
-        ...rest,
-        categories: {
-          connect: categories?.map((id) => ({ id })),
-        },
-      },
-    });
+    return this.menuItemsRepository.create(data);
   }
 
   async update(id: number, data: UpdateMenuItemDto) {
-    const { categories, ...rest } = data;
-
-
-    let categoriesData;
-    if (categories) {
-      if (categories.length > 0) {
-        const existingCategories = await this.prisma.category.findMany({
-          where: { id: { in: categories } },
-        });
-        if (existingCategories.length !== categories.length) {
-          throw new BadRequestException('One or more categories not found.');
-        }
-      }
-      categoriesData = { set: categories.map((id) => ({ id })) };
-    }
-
-    return this.prisma.menuItem.update({
-      where: { id },
-      data: {
-        ...rest,
-        categories: categoriesData,
-      },
-    });
+    return this.menuItemsRepository.update(id, data);
   }
 
   async delete(id: number) {
-  
-    return await this.prisma.menuItem.delete({
-      where: { id },
-    });
+    return this.menuItemsRepository.delete(id);
   }
+  
 }

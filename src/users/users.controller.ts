@@ -15,8 +15,8 @@ import { Serialize } from '../common/decorators/serialize.decorator';
 import { UserResponseDto } from './dto/user.response.dto';
 
 @Controller('users')
+@Roles(UserRole.Manager)
 @UseGuards(RolesGuard)
-@Roles(UserRole.Manager) 
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 

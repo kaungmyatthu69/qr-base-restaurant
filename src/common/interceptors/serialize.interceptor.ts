@@ -10,6 +10,7 @@ import { map } from 'rxjs';
 export class SerializeInterceptor implements NestInterceptor {
   constructor(private dto: any) {}
   intercept(_: ExecutionContext, next: CallHandler) {
+    
     return next.handle().pipe(
       map((data) =>
         plainToInstance(this.dto, data, {

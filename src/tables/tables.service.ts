@@ -1,38 +1,29 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
 import { CreateTableDTO } from '../schemas/table/create-table.schema';
 import { UpdateTableDTO } from '../schemas/table/update-table.schema';
+import { TablesRepository } from './repositories/tables.repository';
 
 @Injectable()
 export class TablesService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private readonly tablesRepository: TablesRepository) {}
 
   async findAll() {
-    return this.prisma.table.findMany();
+    return this.tablesRepository.findAll();
   }
 
   async findById(id: number) {
-    return this.prisma.table.findUnique({
-      where: { id },
-    });
+    return this.tablesRepository.findById(id);
   }
 
   async create(data: CreateTableDTO) {
-    return this.prisma.table.create({
-      data,
-    });
+    return this.tablesRepository.create(data);
   }
 
   async update(id: number, data: UpdateTableDTO) {
-    return this.prisma.table.update({
-      where: { id },
-      data,
-    });
+    return this.tablesRepository.update(id, data);
   }
 
   async delete(id: number) {
-    return this.prisma.table.delete({
-      where: { id },
-    });
+    return this.tablesRepository.delete(id);
   }
 }
